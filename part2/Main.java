@@ -1,24 +1,40 @@
-package practise.task1.part2;
+package practise.task2.part2;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Park park1 = Park.getInstance("Dreamland");
-        Attraction attraction1 = new Attraction("Roller Coaster", 2010, "Intamin");
-        Attraction attraction2 = new Attraction("Ferris Wheel", 2015, "Giant Rides");
-        Attraction attraction3 = new Attraction("Haunted House", 2000, "Spooky Inc.");
-        park1.addAttraction(attraction1);
-        park1.addAttraction(attraction2);
-        park1.addAttraction(attraction3);
-        park1.set_description("Welcome to " + park1.get_name() + " - the best amusement park!");
-        System.out.println(park1.get_description());
-        System.out.println(park1.getAttraction("Roller Coaster"));
-        System.out.println(park1.describeAttraction(attraction2));
-        System.out.println("Park attractions:");
-        System.out.println(park1.getAttractions().toString());
-        park1.removeAttraction(attraction3);
-        System.out.println("After removal:");
-        System.out.println(park1.getAttractions().toString());
-        System.out.println("Total attractions count:");
-        System.out.println(park1.getAttractionCount());
+
+        String choosePark;
+        Attraction attraction = new Attraction();
+
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.print("Enter park (DISNEY/WONDERLAND): ");
+            choosePark = scanner.next().toLowerCase();
+        } while (!choosePark.equals("disney") && !choosePark.equals("wonderland"));
+
+        AttractionBuilder builder;
+
+        if (choosePark.equals("disney")) {
+            builder = new DisneyAttractionBuilder(attraction);
+        } else {
+            builder = new WonderlandAttractionBuilder(attraction);
+        }
+
+        builder.setBasicParams("Roller Coaster", 1000, 150);
+
+        ArrayList<String> features = new ArrayList<>();
+        features.add("High Speed");
+        features.add("Loops");
+        features.add("Scenic Views");
+        builder.setFeatureParams(features, true, false);
+
+        AttractionType type1 = new AttractionType(true, false, false, true, false);
+        builder.setTypeParams(type1);
+        builder.setDescription("High-speed roller coaster with breathtaking views.");
+
+        builder.build();
     }
 }

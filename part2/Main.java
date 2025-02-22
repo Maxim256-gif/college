@@ -1,41 +1,32 @@
-package practise.task3.part2;
+package practise.task4.part2;
+
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
-        AttractionController ac = new AttractionController();
 
-        RemoveAttractionCommand a1 = new RemoveAttractionCommand(4);
-        RemoveAttractionCommand a2 = new RemoveAttractionCommand(8);
-        RemoveAttractionCommand a3 = new RemoveAttractionCommand(16);
+        AttractionAlert alert1 = new AttractionAlert(AlertSeverity.HIGH, "Roller Coaster Maintenance", 101, LocalDate.now(), "Maintenance");
+        AttractionAlert alert2 = new AttractionAlert(AlertSeverity.MEDIUM, "Ferris Wheel Slowdown", 102, LocalDate.now(), "Operations");
+        AttractionAlert alert3 = new AttractionAlert(AlertSeverity.LOW, "Carousel Music Issue", 103, LocalDate.now(), "Audio System");
 
-        StopAttractionCommand b1 = new StopAttractionCommand("Roller Coaster");
-        StopAttractionCommand b2 = new StopAttractionCommand("Ferris Wheel");
+        AttractionController controller = new AttractionController();
 
-        a1.execute();
-        a3.execute();
-        b1.execute();
-        b2.execute();
-        b2.undo();
+        VisitorNotifier visitorNotifier = new VisitorNotifier("John Doe");
+        MaintenanceNotifier maintenanceNotifier = new MaintenanceNotifier(5);
+        OperatorNotifier operatorNotifier = new OperatorNotifier("Operator123");
 
-        ac.addCommand(a1);
-        ac.addCommand(a2);
-        ac.addCommand(a3);
-        ac.addCommand(b1);
-        ac.addCommand(b2);
+        controller.subscribe(visitorNotifier);
+        controller.subscribe(maintenanceNotifier);
+        controller.subscribe(operatorNotifier);
 
-        ac.executeAllPendingCommands();
-        System.out.println(ac.get_commandHistory());
+        controller.addAlert(alert1);
+        controller.addAlert(alert2);
+        controller.addAlert(alert3);
+        controller.infoAlert();
 
-        a2.execute();
-        a2.undo();
-        ac.undoChanges(1);
-        a2.execute();
-        ac.removeCommand(a2);
-        ac.addCommand(a2);
-        b2.execute();
-        ac.addCommand(b2);
-        ac.undoCommand(b2);
-        ac.executeAllPendingCommands();
-        System.out.println(ac.get_commandHistory());
+        controller.addAlert(alert1);
+        controller.subscribe(maintenanceNotifier);
+        controller.unsubscribe(maintenanceNotifier);
+        controller.infoAlert();
     }
 }

@@ -1,37 +1,24 @@
-package practise.task3.part2;
+package practise.task4.part2;
 
 import java.util.ArrayList;
 
-public class AttractionController {
-    private ArrayList<AbstractCommand> _commandsToExecute = new ArrayList<>();
-    private ArrayList<AbstractCommand> _commandHistory = new ArrayList<>();
+public class AttractionController extends Observable {
+    private ArrayList<AttractionAlert> _alertHistory = new ArrayList<>();
 
-    public void addCommand(AbstractCommand command) {
-        _commandsToExecute.add(command);
-    }
+    public AttractionController() {}
 
-    public void removeCommand(AbstractCommand command) {
-        _commandsToExecute.remove(command);
-    }
-
-    public void undoCommand(AbstractCommand command) {
-        _commandHistory.remove(command);
-    }
-
-    public void executeAllPendingCommands() {
-        _commandHistory.addAll(_commandsToExecute);
-        _commandsToExecute.clear();
-    }
-
-    public void undoChanges(int changesToUndo) {
-        for (int i = 0; i < changesToUndo; i++) {
-            if (!_commandHistory.isEmpty()) {
-                _commandHistory.remove(_commandHistory.size() - 1);
+    public void infoAlert() {
+        if (!_alertHistory.isEmpty()) {
+            for (AttractionAlert alert : _alertHistory) {
+                notify(alert);
             }
+            _alertHistory.clear();
+        } else {
+            System.out.println("No alerts in history.");
         }
     }
 
-    public ArrayList<AbstractCommand> get_commandHistory() {
-        return _commandHistory;
+    public void addAlert(AttractionAlert alert) {
+        _alertHistory.add(alert);
     }
 }

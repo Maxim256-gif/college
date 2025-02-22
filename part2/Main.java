@@ -1,40 +1,41 @@
-package practise.task2.part2;
-
-import java.util.ArrayList;
-import java.util.Scanner;
+package practise.task3.part2;
 
 public class Main {
     public static void main(String[] args) {
+        AttractionController ac = new AttractionController();
 
-        String choosePark;
-        Attraction attraction = new Attraction();
+        RemoveAttractionCommand a1 = new RemoveAttractionCommand(4);
+        RemoveAttractionCommand a2 = new RemoveAttractionCommand(8);
+        RemoveAttractionCommand a3 = new RemoveAttractionCommand(16);
 
-        Scanner scanner = new Scanner(System.in);
-        do {
-            System.out.print("Enter park (DISNEY/WONDERLAND): ");
-            choosePark = scanner.next().toLowerCase();
-        } while (!choosePark.equals("disney") && !choosePark.equals("wonderland"));
+        StopAttractionCommand b1 = new StopAttractionCommand("Roller Coaster");
+        StopAttractionCommand b2 = new StopAttractionCommand("Ferris Wheel");
 
-        AttractionBuilder builder;
+        a1.execute();
+        a3.execute();
+        b1.execute();
+        b2.execute();
+        b2.undo();
 
-        if (choosePark.equals("disney")) {
-            builder = new DisneyAttractionBuilder(attraction);
-        } else {
-            builder = new WonderlandAttractionBuilder(attraction);
-        }
+        ac.addCommand(a1);
+        ac.addCommand(a2);
+        ac.addCommand(a3);
+        ac.addCommand(b1);
+        ac.addCommand(b2);
 
-        builder.setBasicParams("Roller Coaster", 1000, 150);
+        ac.executeAllPendingCommands();
+        System.out.println(ac.get_commandHistory());
 
-        ArrayList<String> features = new ArrayList<>();
-        features.add("High Speed");
-        features.add("Loops");
-        features.add("Scenic Views");
-        builder.setFeatureParams(features, true, false);
-
-        AttractionType type1 = new AttractionType(true, false, false, true, false);
-        builder.setTypeParams(type1);
-        builder.setDescription("High-speed roller coaster with breathtaking views.");
-
-        builder.build();
+        a2.execute();
+        a2.undo();
+        ac.undoChanges(1);
+        a2.execute();
+        ac.removeCommand(a2);
+        ac.addCommand(a2);
+        b2.execute();
+        ac.addCommand(b2);
+        ac.undoCommand(b2);
+        ac.executeAllPendingCommands();
+        System.out.println(ac.get_commandHistory());
     }
 }
